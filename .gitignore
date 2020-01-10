@@ -1,0 +1,6 @@
+.vscode
+build
+docs/*
+
+#Exceptions
+!docs/Doxyfile
