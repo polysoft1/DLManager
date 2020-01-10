@@ -44,6 +44,15 @@ namespace Polysoft {
         NoSuchFunctionException(const std::string& what_arg) : DLException(what_arg){}
         NoSuchFunctionException(const char *what_arg) : DLException(what_arg){}
     };
+
+    /**
+     * An exception when their is a problem closing a library 
+     */
+    class CloseLibraryException : public DLException {
+    public:
+        CloseLibraryException(const std::string& what_arg) : DLException(what_arg){}
+        CloseLibraryException(const char *what_arg) : DLException(what_arg){}
+    };
 };
 
 #endif
