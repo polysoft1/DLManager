@@ -12,7 +12,7 @@
 #ifdef __linux__
 #include "DLManager_linux.h"
 #elif _WIN32
-//TODO Windows header
+#include "DLManager_windows.h"
 #endif
 
 #endif

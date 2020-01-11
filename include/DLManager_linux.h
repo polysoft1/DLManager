@@ -38,7 +38,9 @@ namespace Polysoft{
          * @throw OpenLibraryException 
          *  When the library cannot be opened, an OpenLibraryException is thrown
          */
-        DLManager(const std::string& filename){
+        DLManager(const std::string& filename)
+			: handle(nullptr)
+		{
             open(filename);
         }
 
