@@ -74,6 +74,8 @@ namespace Polysoft{
          * 
          * @throw NoSuchFunctionException
          *  If a function cannot be found, then a NoSuchFunctionException is thrown
+         * @throw NoLibraryOpenException
+         *  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
          */
         template<typename T>
         void getFunction(const std::string &name, T &func_dest);
@@ -87,6 +89,8 @@ namespace Polysoft{
          * 
          * @throw NoSuchFunctionException
          *  If a function cannot be found, then a NoSuchFunctionException is thrown
+         * @throw NoLibraryOpenException
+         *  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
          */
         template<typename T>
         void getFunction(const char *name, T &func_dest);
@@ -101,6 +105,8 @@ namespace Polysoft{
          * 
          * @throw NoSuchFunctionException
          *  If a function cannot be found, then a NoSuchFunctionException is thrown
+         * @throw NoLibraryOpenException
+         *  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
          */
         template<typename T>
         T getFunction(const std::string &name);
@@ -115,6 +121,8 @@ namespace Polysoft{
          * 
          * @throw NoSuchFunctionException
          *  If a function cannot be found, then a NoSuchFunctionException is thrown
+         * @throw NoLibraryOpenException
+         *  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
          */
         template<typename T>
         T getFunction(const char *name);
