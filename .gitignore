@@ -2,7 +2,8 @@
 build
 docs/*
 .vs
+test*
 
 #Exceptions
 !docs/Doxyfile
-test*
+!test.cpp
