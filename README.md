@@ -28,5 +28,3 @@ extern "C" void hello(){
 ```
 Then you can access it by passing "hello" as the name to `getFunction`.  
 Check out our [examples](examples) for demonstrations
-
-## Can I pass a std::function to getFunction?
