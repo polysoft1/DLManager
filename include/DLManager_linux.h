@@ -2,6 +2,7 @@
 #define __DL_MANAGER_LINUX_H__
 
 #include <string>
+#include <functional>
 #include <dlfcn.h>
 
 //Check for C++17 support
@@ -127,14 +128,14 @@ namespace Polysoft{
          *  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
          */
         template<typename T>
-        void getFunction(const char *name, T &func_dest){
+        void getFunction(const char *name, std::function<T> &func_dest){
             if(this->handle == nullptr){
                 throw NoLibraryOpenException("You need to call open() before calling getFunction()!");
             }
 
             //Clear previous errors
             dlerror();
-            func_dest = reinterpret_cast<T>(dlsym(this->handle, name));
+            func_dest = reinterpret_cast<T*>(dlsym(this->handle, name));
 
             if(func_dest == nullptr){
                 throw NoSuchFunctionException(dlerror());
@@ -155,17 +156,17 @@ namespace Polysoft{
          *  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
          */
         template<typename T>
-        T getFunction(const std::string &name){
+        std::function<T> getFunction(const std::string &name){
             return this->getFunction<T>(name.c_str());
         }
 
         /**
          * Gets a function and returns it
          * 
-         * @tparam T The type of function being retrieved (currently tested against C function pointers)
+         * @tparam T The type of function being retrieved (use std::function notation)
          * @param [in] name The name of the function to be retrieved
          * 
-         * @return A function casted to type T
+         * @return A function casted to a std::function<T>
          * 
          * @throw NoSuchFunctionException
          *  If a function cannot be found, then a NoSuchFunctionException is thrown
@@ -173,14 +174,13 @@ namespace Polysoft{
          *  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
          */
         template<typename T>
-        T getFunction(const char *name){
+        std::function<T> getFunction(const char *name){
             if(this->handle == nullptr){
                 throw NoLibraryOpenException("You need to call open() before calling getFunction()!");
             }
-
+            std::function<T> result;
             //Clear previous errors
-            dlerror();
-            T result = reinterpret_cast<T>(dlsym(this->handle, name));
+            result = reinterpret_cast<T*>(dlsym(this->handle, name));
 
             if(result == nullptr){
                 throw NoSuchFunctionException(dlerror());
