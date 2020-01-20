@@ -2,6 +2,7 @@
 #define __DL_MANAGER_WINDOWS_H__
 
 #include <string>
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 //Check for C++17 support
