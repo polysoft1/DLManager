@@ -5,7 +5,7 @@ platforms.
 
 ## Currently tested Platforms
 - Windows: 
-- Linux: 
+- Linux: [![](https://github.com/polysoft1/DLManager/workflows/CI/badge.svg)](https://github.com/polysoft1/DLManager/actions)
 
 ## Adding to your project
 DLManager is a header only library, so you only need  
