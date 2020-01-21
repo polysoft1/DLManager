@@ -1,5 +1,5 @@
-#ifndef __DL_MANAGER_LINUX_H__
-#define __DL_MANAGER_LINUX_H__
+#ifndef __DL_MANAGER_UNIX_H__
+#define __DL_MANAGER_UNIX_H__
 
 #include <string>
 #include <functional>
@@ -253,6 +253,17 @@ namespace Polysoft{
 
             return result;
         }
+
+		/**
+		 * @return The standard file suffix of the shared dynamic library for the current platform.
+		 */
+		static std::string getSuffix() {
+#ifdef __APPLE__
+			return ".dylib";
+#else
+			return ".so";
+#endif
+		}
 
 //Check for C++17 support
 #if __cplusplus >= 201703L 
