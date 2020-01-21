@@ -8,18 +8,19 @@ on:
 jobs:
   deploy-docs:
     runs-on: ubuntu-latest
-    container: hrektts/doxygen
-
+    
     steps:
       - uses: actions/checkout@v1
-
+      - name: Fetch dependencies
+        run: |
+          sudo apt install -y doxygen graphviz
       - name: Build the documentation files
         run: |
           cd docs
           doxygen
 
       - name: Install SSH Client
-        uses: webfactory/ssh-agent@v0.2.0
+        uses: yakuhzi/action-ssh-agent@1.4.2        
         with:
           ssh-private-key: ${{ secrets.Github_Pages_Deploy }}
 
