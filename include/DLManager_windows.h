@@ -6,7 +6,7 @@
 #include <windows.h>
 
 //Check for C++17 support
-#if __cplusplus >= 201703L
+#if __cpp_lib_filesystem >= 201703L
 #include <filesystem>
 #endif
 
@@ -196,7 +196,7 @@ namespace Polysoft {
 		}
 
 		//Check for C++17 support
-#if __cplusplus >= 201703L 
+#if __cpp_lib_filesystem >= 201703L 
 		/**
 		 * Constructor that opens the provided dynamic library at the given path
 		 * (C++17 and later)
