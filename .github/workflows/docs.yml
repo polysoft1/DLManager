@@ -7,14 +7,11 @@ on:
 
 jobs:
   deploy-docs:
-
     runs-on: ubuntu-latest
+    container: hrektts/doxygen
 
     steps:
       - uses: actions/checkout@v1
-
-      - name: Fetch dependencies
-        run: apt install -y doxygen
 
       - name: Build the documentation files
         run: |
