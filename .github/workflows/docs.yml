@@ -6,29 +6,29 @@ on:
       - master
 
 jobs:
-  build:
+  deploy-docs:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-      
-    - name: Fetch dependencies
-      run: apt install -y doxygen
-      
-    - name: Build the documentation files
-      run: |
-        cd build
-        doxygen
-        
-    - name: Install SSH Client
-    - uses: webfactory/ssh-agent@v0.2.0
-      with:
-        ssh-private-key: ${{ secrets.Github_Pages_Deploy }}
-      
-    - name: Deploy to Github Pages
-      uses: JamesIves/github-pages-deploy-action@3.2.0
-      with:
-        SSH: true
-        FOLDER: docs/html
-        BRANCH: docs
+      - uses: actions/checkout@v1
+
+      - name: Fetch dependencies
+        run: apt install -y doxygen
+
+      - name: Build the documentation files
+        run: |
+          cd build
+          doxygen
+
+      - name: Install SSH Client
+      - uses: webfactory/ssh-agent@v0.2.0
+        with:
+          ssh-private-key: ${{ secrets.Github_Pages_Deploy }}
+
+      - name: Deploy to Github Pages
+        uses: JamesIves/github-pages-deploy-action@3.2.0
+        with:
+          SSH: true
+          FOLDER: docs/html
+          BRANCH: docs
