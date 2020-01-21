@@ -2,13 +2,14 @@
 #include <iostream>
 #include <functional>
 #include <vector>
+#include <ctime>
 
 const int TOTAL_NUMS = 10000;
 const int CIEL = 500;
 
 using std::function;
 
-int main(){
+int main() {
 	srand(time(NULL));
 
 	function<void()> test;
@@ -20,7 +21,7 @@ int main(){
 	so in this case if "test.so" was passed to lib, it would not work as
 	anticipated
 	*/
-	Polysoft::DLManager lib = Polysoft::DLManager("./test.so");
+	Polysoft::DLManager lib = Polysoft::DLManager("./test" + Polysoft::DLManager::getSuffix());
 	Polysoft::DLManager lib2;
 	test = lib.getFunction<void()>("test");
 	test();
