@@ -20,26 +20,28 @@ int main(){
 	so in this case if "test.so" was passed to lib, it would not work as
 	anticipated
 	*/
-	Polysoft::DLManager lib("./test.so");
+	Polysoft::DLManager lib = Polysoft::DLManager("./test.so");
+	Polysoft::DLManager lib2;
 	test = lib.getFunction<void()>("test");
 	test();
+	
+	lib2 = lib;
+	lib.close();
 
 	std::vector<int> numbers;
 	for(int i = 0; i < TOTAL_NUMS; ++i){
 		numbers.push_back(rand() % CIEL);
 	}
 
-	average = lib.getFunction<double(std::vector<int>)>("average");
+	average = lib2.getFunction<double(std::vector<int>)>("average");
 
 	std::cout << "Average of randoms is: " << average(numbers) << std::endl;
 
 	try{
-		lib.getFunction<void()>("invalid_function_name");
+		lib2.getFunction<void()>("invalid_function_name");
 	}catch(Polysoft::NoSuchFunctionException e){
 		std::cout << "Error getting \"invalid_function_name\": " << e.what() << std::endl;
 	}
-
-	lib.close();
 
 	try{
 		lib.getFunction<void()>("test");
