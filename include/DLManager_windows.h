@@ -2,6 +2,7 @@
 #define __DL_MANAGER_WINDOWS_H__
 
 #include <string>
+#include <functional>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -25,6 +26,12 @@ namespace Polysoft {
 		 *  the dynamic library.
 		 */
 		SharedLib handle;
+
+		/**
+		 * This is used primarily for copying DLManager around, since the handle will not close
+		 * unless dlclose has been called as many times as dlopen has been called
+		 */
+		std::string dest;
 
 		std::string getLastErrMessage() {
 			DWORD dLastError = GetLastError();
@@ -71,6 +78,64 @@ namespace Polysoft {
 		}
 
 		/**
+		 * Copy Constructor, makes a copy of whatever was passed without destroying it
+		 *
+		 * @param [in] in The DLManager object to be copied
+		 *
+		 * @throw OpenLibraryException
+		 *  When the library cannot be opened, an OpenLibraryException is thrown
+		 */
+		DLManager(const DLManager& in) : handle(nullptr) {
+			open(in.dest);
+		}
+
+		/**
+		 * Move schemantics copy constructor, makes a copy of whatever was pass, and trashing it for the sake of efficiency.
+		 *
+		 * @warning This should not be invoked directly, unless you understand what you are doing.
+		 *
+		 * @param [in] in The DLManager object to be copied
+		 */
+		DLManager(DLManager&& in) {
+			handle = in.handle;
+			dest = in.dest;
+
+			in.handle = nullptr;
+		}
+
+		/**
+		 * Normal assignment operator, you should know how this works
+		 *
+		 * @param [in] in The DLManager object that will be assigned to the current class instance
+		 *
+		 * @throw OpenLibraryException
+		 *  When the library cannot be opened, an OpenLibraryException is thrown
+		 */
+
+		DLManager& operator=(const DLManager& in) {
+			dest = in.dest;
+			open(dest);
+
+			return *this;
+		}
+
+		/**
+		 * A move schemantics version of the assignment operator, does the same thing as
+		 * normal assignment, but it trashes the assigned object in the process.
+		 *
+		 * @warning This should not be invoked directly, unless you understand what you are doing.
+		 *
+		 * @param [in] in The DLManager object to be assigned to the current class instance
+		 */
+		DLManager& operator=(DLManager&& in) {
+			handle = in.handle;
+			dest = in.dest;
+
+			in.handle = nullptr;
+			return *this;
+		}
+
+		/**
 		 * Opens the supplied dynamic library
 		 *
 		 * @param [in] filename
@@ -87,6 +152,7 @@ namespace Polysoft {
 			if (handle == nullptr) {
 				throw OpenLibraryException(getLastErrMessage());
 			}
+			dest = filename;
 		}
 
 		/**
@@ -120,7 +186,7 @@ namespace Polysoft {
 		 *  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
 		 */
 		template<typename T>
-		void getFunction(const std::string& name, T& func_dest) {
+		void getFunction(const std::string& name, std::function<T> &func_dest) {
 			this->getFunction<T>(name.c_str(), func_dest);
 		}
 
@@ -137,7 +203,7 @@ namespace Polysoft {
 		 *  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
 		 */
 		template<typename T>
-		void getFunction(const char* name, T& func_dest) {
+		void getFunction(const char * name, std::function<T>& func_dest) {
 			if (handle == nullptr) {
 				throw NoLibraryOpenException("You need to call open() before calling getFunction()!");
 			}
@@ -163,7 +229,7 @@ namespace Polysoft {
 		*  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
 		*/
 		template<typename T>
-		T getFunction(const std::string& name) {
+		std::function<T> getFunction(const std::string& name) {
 			return this->getFunction<T>(name.c_str());
 		}
 
@@ -181,18 +247,25 @@ namespace Polysoft {
 		 *  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
 		 */
 		template<typename T>
-		T getFunction(const char* name) {
+		std::function<T> getFunction(const char* name) {
 			if (handle == nullptr) {
 				throw NoLibraryOpenException("You need to call open() before calling getFunction()!");
 			}
 
-			T result = reinterpret_cast<T>(GetProcAddress(handle, name));
+			std::function<T> result = reinterpret_cast<T*>(GetProcAddress(handle, name));
 
 			if (result == nullptr) {
 				throw NoSuchFunctionException(getLastErrMessage());
 			}
 
 			return result;
+		}
+
+		/**
+		 * @return The standard file suffix of the shared dynamic library for the current platform.
+		 */
+		static std::string getSuffix() {
+			return ".dll";
 		}
 
 		//Check for C++17 support
