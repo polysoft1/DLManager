@@ -25,6 +25,12 @@ namespace Polysoft{
          *  the dynamic library.
          */
         SharedLib handle;
+
+        /**
+         * This is used primarily for copying DLManager around, since the handle will not close
+         * unless dlclose has been called as many times as dlopen has been called
+         */
+        std::string dest;
     public:
         /**
          * Default constructor, does not open any dynamic library 
@@ -56,6 +62,64 @@ namespace Polysoft{
         }
 
         /**
+         * Copy Constructor, makes a copy of whatever was passed without destroying it
+         * 
+         * @param [in] in The DLManager object to be copied
+         * 
+         * @throw OpenLibraryException 
+         *  When the library cannot be opened, an OpenLibraryException is thrown         
+         */
+        DLManager(const DLManager &in) : handle(nullptr){
+            open(in.dest);
+        }
+
+        /**
+         * Move schemantics copy constructor, makes a copy of whatever was pass, and trashing it for the sake of efficiency.
+         * 
+         * @warning This should not be invoked directly, unless you understand what you are doing.
+         * 
+         * @param [in] in The DLManager object to be copied 
+         */
+        DLManager(DLManager &&in) {
+            handle = in.handle;
+            dest = in.dest;
+
+            in.handle = nullptr;
+        }
+
+        /**
+         * Normal assignment operator, you should know how this works
+         * 
+         * @param [in] in The DLManager object that will be assigned to the current class instance
+         * 
+         * @throw OpenLibraryException 
+         *  When the library cannot be opened, an OpenLibraryException is thrown
+         */
+
+        DLManager& operator=(const DLManager& in){
+            dest = in.dest;
+            open(dest);
+            
+            return *this;
+        }
+
+        /**
+         * A move schemantics version of the assignment operator, does the same thing as
+         * normal assignment, but it trashes the assigned object in the process.
+         * 
+         * @warning This should not be invoked directly, unless you understand what you are doing.
+         * 
+         * @param [in] in The DLManager object to be assigned to the current class instance 
+         */
+        DLManager& operator=(DLManager&& in){
+            handle = in.handle;
+            dest = in.dest;
+
+            in.handle = nullptr;
+            return *this;
+        }
+
+        /**
          * Opens the supplied dynamic library
          * 
          * @param [in] filename
@@ -74,6 +138,7 @@ namespace Polysoft{
             if(handle == nullptr){
                 throw OpenLibraryException(dlerror());
             }
+            dest = filename;
         }
 
         /**
@@ -101,7 +166,7 @@ namespace Polysoft{
         /**
          * Gets a function and stores it at the passed function destination
          * 
-         * @tparam T The type of function being retrieved (currently tested against C function pointers)
+         * @tparam T The signature of the function being retrieved (the same notation as std::function)
          * @param [in] name The name of the function to be retrieved
          * @param [out] func_dest The variable to store the function
          * 
@@ -111,14 +176,14 @@ namespace Polysoft{
          *  If a dynamic library is not opened beforehand, a NoLibraryOpenException is thrown
          */
         template<typename T>
-        void getFunction(const std::string &name, T &func_dest){
+        void getFunction(const std::string &name, std::function<T> &func_dest){
             this->getFunction<T>(name.c_str(), func_dest);
         }
         
         /**
          * Gets a function and stores it at the passed function destination
          * 
-         * @tparam T The type of function being retrieved (currently tested against C function pointers)
+         * @tparam T The type of function being retrieved (the same notation as std::function)
          * @param [in] name The name of the function to be retrieved
          * @param [out] func_dest The variable to store the function
          * 
@@ -145,7 +210,7 @@ namespace Polysoft{
          /**
          * Gets a function and returns it
          * 
-         * @tparam T The type of function being retrieved (currently tested against C function pointers)
+         * @tparam T The type of function being retrieved (the same notation as std::function)
          * @param [in] name The name of the function to be retrieved
          * 
          * @return A function casted to type T
