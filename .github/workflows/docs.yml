@@ -1,5 +1,6 @@
 name: Docs
 
+
 on:
   push:
     branches: 
@@ -19,14 +20,14 @@ jobs:
           cd docs
           doxygen
 
-      - name: Install SSH Client
-        uses: yakuhzi/action-ssh-agent@1.4.2
-        with:
-          ssh-private-key: ${{ secrets.Github_Pages_Deploy }}
+   #   - name: Install SSH Client
+    #    uses: yakuhzi/action-ssh-agent@1.4.2
+     #   with:
+      #    ssh-private-key: ${{ secrets.Github_Pages_Deploy }}
 
-      - name: Deploy to Github Pages
-        uses: JamesIves/github-pages-deploy-action@3.2.0
-        with:
-          SSH: true
-          FOLDER: docs/html
-          BRANCH: docs
+      #- name: Deploy to Github Pages
+       # uses: JamesIves/github-pages-deploy-action@3.2.0
+        #with:
+#          SSH: true
+ #         FOLDER: docs/html
+  #        BRANCH: docs
