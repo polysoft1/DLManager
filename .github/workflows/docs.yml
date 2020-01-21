@@ -18,11 +18,11 @@ jobs:
 
       - name: Build the documentation files
         run: |
-          cd build
+          cd docs
           doxygen
 
       - name: Install SSH Client
-      - uses: webfactory/ssh-agent@v0.2.0
+        uses: webfactory/ssh-agent@v0.2.0
         with:
           ssh-private-key: ${{ secrets.Github_Pages_Deploy }}
 
