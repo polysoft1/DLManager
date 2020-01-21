@@ -1,6 +1,9 @@
-name: CI
+name: Docs
 
-on: [push]
+on:
+  push:
+    branches: 
+      - master
 
 jobs:
   build:
@@ -28,3 +31,4 @@ jobs:
       with:
         SSH: true
         FOLDER: docs/html
+        BRANCH: docs
