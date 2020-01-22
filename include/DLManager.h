@@ -9,10 +9,10 @@
 #include <string>
 #include "Exceptions.h"
 
-#ifdef __linux__
-#include "DLManager_unix.h"
-#elif _WIN32
+#ifdef _WIN32
 #include "DLManager_windows.h"
+#else 
+#include "DLManager_unix.h"
 #endif
 
 #endif
