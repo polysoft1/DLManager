@@ -10,6 +10,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: Build the test file
       run: |
-        cd examples/linux
+        cd examples/simple
+        mkdir build
+        cd build
+        cmake ..
         make
-        ./test
