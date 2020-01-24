@@ -21,7 +21,7 @@ int main() {
 	so in this case if "test.so" was passed to lib, it would not work as
 	anticipated
 	*/
-	Polysoft::DLManager lib = Polysoft::DLManager("./test" + Polysoft::DLManager::getSuffix());
+	Polysoft::DLManager lib("./test" + Polysoft::DLManager::getSuffix());
 	Polysoft::DLManager lib2;
 	test = lib.getFunction<void()>("test");
 	test();
