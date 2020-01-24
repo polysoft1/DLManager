@@ -24,7 +24,7 @@ namespace Polysoft{
          *  This is used for storing the handle for whichever library is being used to actually load
          *  the dynamic library.
          */
-        SharedLib handle;
+        SharedLib handle = nullptr;
 
         /**
          * This is used primarily for copying DLManager around, since the handle will not close
@@ -73,6 +73,24 @@ namespace Polysoft{
             open(in.dest);
         }
 
+        //Check for C++17 support
+#if __cplusplus >= 201703L 
+        /**
+         * Constructor that opens the provided dynamic library at the given path
+         * (C++17 and later)
+         *
+         * @param [in] filepath
+         *  The path to the dynamic library
+         * @throw OpenLibraryException
+         *  When the library cannot be opened, an OpenLibraryException is thrown
+         */
+        DLManager(const std::filesystem::path& filepath)
+            : handle(nullptr)
+        {
+            open(filepath);
+        }
+#endif
+
         /**
          * Move schemantics copy constructor, makes a copy of whatever was pass, and trashing it for the sake of efficiency.
          * 
@@ -118,6 +136,23 @@ namespace Polysoft{
             in.handle = nullptr;
             return *this;
         }
+
+        //Check for C++17 support
+#if __cplusplus >= 201703L 
+
+        /**
+         * Opens the supplied dynamic library at the given path
+         * (C++17 and later)
+         *
+         * @param [in] filepath
+         *      The path to the dynamic library
+         * @throw OpenLibraryException
+         *  When the library cannot be opened, an OpenLibraryException is thrown
+         */
+        void open(const std::filesystem::path& filepath) {
+            open(filepath.string());
+        }
+#endif
 
         /**
          * Opens the supplied dynamic library
@@ -264,35 +299,6 @@ namespace Polysoft{
 			return ".so";
 #endif
 		}
-
-//Check for C++17 support
-#if __cplusplus >= 201703L 
-        /**
-         * Constructor that opens the provided dynamic library at the given path
-         * (C++17 and later)
-         * 
-         * @param [in] filepath 
-         *  The path to the dynamic library
-         * @throw OpenLibraryException
-         *  When the library cannot be opened, an OpenLibraryException is thrown
-         */
-        DLManager(const std::filesystem::path& filepath){
-            open(filepath);
-        }
-
-        /**
-         * Opens the supplied dynamic library at the given path
-         * (C++17 and later)
-         * 
-         * @param [in] filepath
-         *      The path to the dynamic library
-         * @throw OpenLibraryException
-         *  When the library cannot be opened, an OpenLibraryException is thrown
-         */
-        void open(const std::filesystem::path& filepath){
-            open(filepath.string());
-        }
-#endif
     };
 };
 #endif
