@@ -131,6 +131,7 @@ namespace Polysoft {
 		 */
 
 		DLManager& operator=(const DLManager& in) {
+			// TODO: Should this close the existing lib, in case there is one?
 			dest = in.dest;
 			open(dest);
 
