@@ -4,6 +4,7 @@ docs/*
 .vs
 test*
 out/
+/examples/simple/CMakeSettings.json
 
 #Exceptions
 !docs/Doxyfile
