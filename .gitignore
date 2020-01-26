@@ -3,6 +3,7 @@ build
 docs/*
 .vs
 test*
+out/
 
 #Exceptions
 !docs/Doxyfile
