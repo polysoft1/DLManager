@@ -3,7 +3,7 @@
 #include <functional>
 #include <vector>
 #include <ctime>
-#if __cplusplus >= 201703L 
+#if __cpp_lib_filesystem >= 201703L
 #include <filesystem>
 #endif
 
@@ -58,7 +58,7 @@ int main() {
 		std::cout << "Intentional error getting \"test\": " << e.what() << std::endl;
 	}
 
-#if __cplusplus >= 201703L 
+#if __cpp_lib_filesystem >= 201703L
 
 	// Test using filesystem
 	std::cout << std::endl << "Testing basic functionality with C++17 filesystem:" << std::endl;
