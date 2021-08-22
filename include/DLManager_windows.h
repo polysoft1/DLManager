@@ -146,7 +146,7 @@ namespace Polysoft {
 		 *
 		 * @param [in] in The DLManager object to be assigned to the current class instance
 		 */
-		DLManager& operator=(DLManager&& in) {
+		DLManager& operator=(DLManager&& in) noexcept {
 			handle = in.handle;
 			dest = in.dest;
 
